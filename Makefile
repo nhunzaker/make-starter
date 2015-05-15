@@ -2,14 +2,14 @@
 # http://www.gnu.org/software/make/manual/make.html#Automatic-Variables
 # https://news.ycombinator.com/item?id=7622296
 
-BIN				= $$(npm bin)
-DIST			= public
-SASS			= $(BIN)/node-sass
-PREFIX		= $(BIN)/autoprefixer
-KARMA			= $(BIN)/karma
-SWIG			= $(BIN)/swig
-IMAGEMIN	= $(BIN)/imagemin
-WEBPACK 	= $(BIN)/webpack
+BIN       = $$(npm bin)
+DIST      = public
+SASS      = $(BIN)/node-sass
+PREFIX    = $(BIN)/autoprefixer
+KARMA     = $(BIN)/karma
+SWIG      = $(BIN)/swig
+IMAGEMIN  = $(BIN)/imagemin
+WEBPACK   = $(BIN)/webpack
 
 .PHONY: build clean $(DIST)
 
