@@ -34,7 +34,7 @@ app/%.html: $(DIST)
 	$(SWIG) render $@ -o $(DIST)/
 
 javascript:
-	@$(WEBPACK) -d --dev-tool sourcemap
+	@$(WEBPACK)
 
 app/assets/fonts: $(DIST)
 	cp -pr $@ $(DIST)/assets

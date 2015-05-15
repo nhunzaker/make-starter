@@ -1,6 +1,12 @@
 var path = require('path')
 
+var isDevelopment = process.env.NODE_ENV !== 'production'
+
 module.exports = {
+  debug: isDevelopment,
+
+  devtool: isDevelopment ? '#eval-source-map' : 'source-map',
+
   context: path.resolve('./app/assets/javascripts/'),
 
   entry: {
