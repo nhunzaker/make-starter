@@ -13,12 +13,7 @@ WEBPACK   = $(BIN)/webpack
 
 .PHONY: build clean $(DIST)
 
-build: clean
-	make app/views/*.html
-	make app/assets/stylesheets/global.sass
-	make javascript
-	make app/assets/fonts
-	make app/assets/images/**
+build: clean app/views/*.html app/assets/stylesheets/global.sass javascript app/assets/fonts app/assets/images/**
 
 clean:
 	rm -rf public/*
@@ -39,10 +34,10 @@ app/%.html: $(DIST)
 	$(SWIG) render $@ -o $(DIST)/
 
 javascript:
-	@$(WEBPACK) -d --dev-tool sourcemap --config config/webpack.js
+	@$(WEBPACK) -d --dev-tool sourcemap
 
 app/assets/fonts: $(DIST)
 	cp -pr $@ $(DIST)/assets
 
 test:
-	@$(karma) start config/karma.js --single-run
+	@$(karma) start --single-run

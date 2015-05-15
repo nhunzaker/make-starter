@@ -1,8 +1,7 @@
-var path   = require('path')
-var config = require('./')
+var path = require('path')
 
 module.exports = {
-  context: path.resolve(config.sourceAssets + '/javascripts/'),
+  context: path.resolve('./app/assets/javascripts/'),
 
   entry: {
     page1 : './page1.js',
@@ -10,7 +9,7 @@ module.exports = {
   },
 
   output: {
-    path: config.publicAssets + '/javascripts/',
+    path: './public/assets/javascripts/',
     filename: '[name].js',
     publicPath: 'assets/javascripts/'
   },
