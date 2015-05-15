@@ -1,0 +1,28 @@
+{
+  "name": "make-starter",
+  "version": "1.0.0",
+  "description": "Makefile starter with common tasks and scenarios",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nhunzaker/make-starter.git"
+  },
+  "scripts": {},
+  "dependencies": {
+    "autoprefixer": "^5.1.1",
+    "babel-core": "~5",
+    "babel-loader": "~5",
+    "imagemin": "^3.1.0",
+    "karma": "0.12.31",
+    "karma-cli": "~0.0",
+    "karma-firefox-launcher": "~0.1",
+    "karma-mocha": "~0.1",
+    "karma-nyan-reporter": "~0.0",
+    "karma-sinon-chai": "~0.3",
+    "karma-webpack": "~1",
+    "mocha": "~2.2",
+    "node-sass": "~3.1",
+    "swig": "^1.4.2",
+    "webpack": "~1.9"
+  },
+  "devDependencies": {}
+}
