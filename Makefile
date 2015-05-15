@@ -28,7 +28,7 @@ app/%.sass: $(DIST)
 	$(SASS) $@ | $(PREFIX) > $(DIST)/$*.css
 
 app/%.png: $(DIST)
-	$(IMAGEMIN) $@ $(DIST)/$*.png
+	$(IMAGEMIN) $@ > $(DIST)/$*.png
 
 app/%.html: $(DIST)
 	$(SWIG) render $@ -o $(DIST)/
