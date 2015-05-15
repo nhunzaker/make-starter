@@ -8,7 +8,7 @@ module.exports = function(config){
     preprocessors: {
       'app/assets/javascripts/**/__tests__/*': ['webpack']
     },
-    webpack: require('./webpack'),
+    webpack: require('./webpack.config'),
     reporters: ['nyan'],
     browsers: [ 'Firefox' ]
   })
