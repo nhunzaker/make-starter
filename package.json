@@ -6,7 +6,11 @@
     "type": "git",
     "url": "git://github.com/nhunzaker/make-starter.git"
   },
-  "scripts": {},
+  "license":"MIT",
+  "scripts": {
+    "test": "npm test",
+    "postinstall": "make all -j8"
+  },
   "dependencies": {
     "autoprefixer": "~5.1",
     "babel-core": "~5",

@@ -11,22 +11,29 @@ fonts    := $(DIST)/assets/fonts
 views    := $(DIST)/index.html $(DIST)/page2.html
 styles   := $(DIST)/assets/stylesheets/style.css
 
-all: $(DIST) javascript $(images) $(styles) $(fonts) $(views)
-	@browser-sync reload
+all    : javascript images css fonts html
+images : $(DIST) $(images)
+fonts  : $(DIST) $(fonts)
+html   : $(DIST) $(views)
+css    : $(DIST) $(styles)
 
 $(DIST):
 	@mkdir -p $(DIST)/assets/{images,stylesheets}
 
 $(DIST)/%.css: app/%.sass
-	node-sass $< | postcss --use autoprefixer -c config/postcss.json -o $@
+	@echo $@
+	@sassc $< | postcss --use autoprefixer -o $@
 
 $(DIST)/%.png: $(SRC)/%.png
-	imagemin $< > $@
+	@echo $@
+	@imagemin $< > $@
 
 $(DIST)/%.html: $(VIEWS)/%.html $(partials)
-	swig render $< > $@
+	@echo $@
+	@swig render $< > $@
 
 $(DIST)/%/fonts: $(SRC)/%/fonts
+	@echo $@
 	@cp -pr $< $@
 
 javascript:
@@ -36,9 +43,12 @@ install:
 	@npm install --ignore-scripts
 	@npm test
 
-watch: all
-	@fswatch -0 $(SRC) | xargs -0 -n1 -I{} make -j8 &\
-	browser-sync start --server $(DIST) --reload-delay 200
+reload: all
+	@browser-sync reload
+
+watch: all 
+	@fswatch -0 $(SRC) | xargs -0 -n1 -I{} make -j8 reload &\
+	browser-sync start --server $(DIST)
 
 clean:
 	@rm -rf $(DIST)
