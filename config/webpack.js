@@ -7,7 +7,7 @@ module.exports = {
 
   devtool: isDevelopment ? '#eval-source-map' : 'source-map',
 
-  context: path.resolve('./app/assets/javascripts/'),
+  context: path.resolve(__dirname, '..', './app/assets/javascripts/'),
 
   entry: {
     page1 : './page1.js',

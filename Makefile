@@ -1,42 +1,49 @@
-# Useful stuff:
-# http://www.gnu.org/software/make/manual/make.html#Automatic-Variables
-# https://news.ycombinator.com/item?id=7622296
+SHELL  := /bin/bash
+PATH   := node_modules/.bin:$(PATH)
+SRC    := app
+DIST   := public
+ASSETS := $(SRC)/assets
+VIEWS  := $(SRC)/views
 
-BIN      = $$(npm bin)
-ASSETS   = app/assets
-VIEWS    = app/views
-DIST     = public
-SASS     = $(BIN)/node-sass
-PREFIX   = $(BIN)/autoprefixer
-KARMA    = $(BIN)/karma
-SWIG     = $(BIN)/swig
-IMAGEMIN = $(BIN)/imagemin
-WEBPACK  = $(BIN)/webpack
+partials := $(wildcard $(VIEWS)/**/*.html)
+images   := $(shell find $(ASSETS)/images -type f | sed s/$(SRC)/$(DIST)/)
+fonts    := $(DIST)/assets/fonts
+views    := $(DIST)/index.html $(DIST)/page2.html
+styles   := $(DIST)/assets/stylesheets/style.css
 
-.PHONY: build clean $(DIST)
-
-build: clean $(VIEWS)/*.html $(ASSETS)/stylesheets/global.sass $(ASSETS)/fonts $(ASSETS)/images/** javascript
-
-clean:
-	@rm -rf public/*
+all: $(DIST) javascript $(images) $(styles) $(fonts) $(views)
+	@browser-sync reload
 
 $(DIST):
 	@mkdir -p $(DIST)/assets/{images,stylesheets}
 
-app/%.sass: $(DIST)
-	@$(SASS) $@ | $(PREFIX) > $(DIST)/$*.css
+$(DIST)/%.css: app/%.sass
+	node-sass $< | postcss --use autoprefixer -c config/postcss.json -o $@
 
-app/%.png: $(DIST)
-	@$(IMAGEMIN) $@ > $(DIST)/$*.png
+$(DIST)/%.png: $(SRC)/%.png
+	imagemin $< > $@
 
-app/%.html: $(DIST)
-	@$(SWIG) render $@ -o $(DIST)/
+$(DIST)/%.html: $(VIEWS)/%.html $(partials)
+	swig render $< > $@
+
+$(DIST)/%/fonts: $(SRC)/%/fonts
+	@cp -pr $< $@
 
 javascript:
-	@$(WEBPACK)
+	@webpack --config config/webpack.js
 
-app/assets/fonts: $(DIST)
-	@cp -pr $@ $(DIST)/assets
+install:
+	@npm install --ignore-scripts
+	@npm test
+
+watch: all
+	@fswatch -0 $(SRC) | xargs -0 -n1 -I{} make -j8 &\
+	browser-sync start --server $(DIST) --reload-delay 200
+
+clean:
+	@rm -rf $(DIST)
 
 test:
-	@$(karma) start --single-run
+	karma start config/karma.js --single-run
+
+.PHONY: javascript install watch clean test
