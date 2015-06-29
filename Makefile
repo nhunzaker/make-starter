@@ -22,7 +22,7 @@ $(DIST):
 
 $(DIST)/%.css: app/%.sass
 	@echo $@
-	@sassc $< | postcss --use autoprefixer -o $@
+	@node-sass $< | postcss --use autoprefixer -o $@
 
 $(DIST)/%.png: $(SRC)/%.png
 	@echo $@
