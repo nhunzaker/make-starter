@@ -4,10 +4,11 @@ SRC    := app
 DIST   := public
 ASSETS := $(SRC)/assets
 VIEWS  := $(SRC)/views
+IMAGES := $(ASSETS)/images
 
-partials := $(wildcard $(VIEWS)/**/*.html)
-images   := $(shell find $(ASSETS)/images -type f | sed s:$(SRC):$(DIST):)
+partials := $(wildcard $(VIEWS)/*/*.html)
 fonts    := $(DIST)/assets/fonts
+images   := $(shell find $(IMAGES) -type f | sed s:$(SRC):$(DIST):)
 views    := $(shell find $(VIEWS)/*.html | sed s:$(VIEWS):$(DIST):)
 styles   := $(shell find $(ASSETS)/stylesheets/*.sass | sed "s:$(SRC):$(DIST):; s:sass:css:")
 
@@ -34,7 +35,7 @@ $(DIST)/%.html: $(VIEWS)/%.html $(partials)
 
 $(DIST)/%/fonts: $(SRC)/%/fonts
 	@echo $@
-	@cp -pr $< $@
+	@cp -pr $< $@I
 
 javascript:
 	@webpack --config config/webpack.js
@@ -43,12 +44,13 @@ install:
 	@npm install --ignore-scripts
 	@npm test
 
-reload: all
+reload: $(DIST) images css fonts html
 	@browser-sync reload
 
 watch: all
 	@fswatch -0 $(SRC) | xargs -0 -n1 -I{} make -j8 reload &\
-	browser-sync start --server $(DIST)
+	browser-sync start --server $(DIST) &\
+	webpack -w --config config/webpack.js
 
 clean:
 	@rm -rf $(DIST)
@@ -56,4 +58,4 @@ clean:
 test:
 	karma start config/karma.js --single-run
 
-.PHONY: javascript install watch clean test release
+.PHONY: install watch clean test release
