@@ -56,7 +56,4 @@ clean:
 test:
 	karma start config/karma.js --single-run
 
-release: all
-	git subtree push --prefix $(DIST) origin gh-pages
-
 .PHONY: javascript install watch clean test release
