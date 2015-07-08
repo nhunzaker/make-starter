@@ -23,7 +23,7 @@ $(DIST):
 
 $(DIST)/%.css: app/%.sass
 	@echo $@
-	@node-sass $< | postcss --use autoprefixer -o $@
+	@node-sass --output-style compressed $< | postcss --use autoprefixer -o $@
 
 $(DIST)/%.png: $(SRC)/%.png
 	@echo $@
@@ -42,7 +42,7 @@ javascript:
 
 install:
 	@npm install --ignore-scripts
-	@npm test
+	@make test
 
 reload: $(DIST) images css fonts html
 	@browser-sync reload
