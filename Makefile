@@ -11,23 +11,26 @@ fonts  : $(subst $(SRC), $(DIST), $(ASSETS)/fonts)
 html   : $(subst $(VIEWS), $(DIST), $(wildcard $(VIEWS)/*.*))
 css    : $(patsubst $(SRC)%.scss, $(DIST)%.css, $(wildcard $(ASSETS)/stylesheets/*.scss))
 
-$(DIST)/%.css: $(shell find $(SRC) -name *.scss)
-	node-sass --output $(@D) --source-map $@.map $(SRC)/$*.scss
-	postcss --use autoprefixer -o $@ $@
+$(DIST)/%.css: $(SRC)/%.scss $(shell find $(SRC) -name *.scss)
+	@ node-sass --output $(@D) --source-map $@.map $(SRC)/$*.scss -q
+	@ postcss --use autoprefixer -o $@ $@
+	@ echo $@
 
 $(DIST)/%.html: $(VIEWS)/%.html $(VIEWS)/**/*.html
 	@ mkdir -p $(@D)
-	swig render $< > $@
+	@ swig render $< > $@
+	@ echo $@
 
 $(DIST)/assets/%: $(SRC)/assets/%
-	@mkdir -p $(@D)
-	cp -r $< $@
+	@ mkdir -p $(@D)
+	@ cp -r $< $@
+	@ echo $@
 
 javascript: $(shell find $(SRC) -name '*.js')
-	webpack --config config/webpack.js --progress --quiet
+	@webpack --config config/webpack.js --progress --quiet
 
 install:
-	@ npm install --ignore-scripts
+	npm install --ignore-scripts
 
 reload: $(DIST) css images fonts html
 	browser-sync reload
@@ -38,7 +41,7 @@ watch: all
 	& webpack -w --config config/webpack.js
 
 clean:
-	@ rm -rf $(DIST)
+	rm -rf $(DIST)
 
 test:
 	karma start config/karma.js --single-run
