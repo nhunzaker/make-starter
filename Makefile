@@ -5,44 +5,32 @@ DIST   := public
 ASSETS := $(SRC)/assets
 VIEWS  := $(SRC)/views
 
-all    : $(DIST) javascript images css fonts html
+all    : javascript images css fonts html
 images : $(subst $(SRC), $(DIST), $(wildcard $(ASSETS)/images/*.*))
 fonts  : $(subst $(SRC), $(DIST), $(ASSETS)/fonts)
 html   : $(subst $(VIEWS), $(DIST), $(wildcard $(VIEWS)/*.*))
 css    : $(patsubst $(SRC)%.scss, $(DIST)%.css, $(wildcard $(ASSETS)/stylesheets/*.scss))
 
-$(DIST):
-	@ mkdir -p $(DIST)/assets/{images,stylesheets}
-
-$(DIST)/%.css: $(SRC)/%.scss $(shell find $(SRC) -name *.scss)
-	@ echo "Compiling $@"
-	@ node-sass --output $(shell dirname $@) --source-map $@.map $<
-	@ postcss --use autoprefixer -o $@ $@
-
-$(DIST)/%.png: $(SRC)/%.png
-	@ echo "Copying $^"
-	@ mkdir -p $(@D)
-	@ cp $^ $@
+$(DIST)/%.css: $(shell find $(SRC) -name *.scss)
+	node-sass --output $(@D) --source-map $@.map $(SRC)/$*.scss
+	postcss --use autoprefixer -o $@ $@
 
 $(DIST)/%.html: $(VIEWS)/%.html $(VIEWS)/**/*.html
-	@ echo $@
 	@ mkdir -p $(@D)
-	@ swig render $< > $@
+	swig render $< > $@
 
-$(DIST)/%/fonts: $(SRC)/%/fonts
-	@ echo $@
-	@ mkdir -p $(@D)
-	@ cp -pr $< $@
+$(DIST)/assets/%: $(SRC)/assets/%
+	@mkdir -p $(@D)
+	cp -r $< $@
 
 javascript: $(shell find $(SRC) -name '*.js')
-	@ echo $
-	@ webpack --config config/webpack.js --progress --quiet
+	webpack --config config/webpack.js --progress --quiet
 
 install:
 	@ npm install --ignore-scripts
 
 reload: $(DIST) css images fonts html
-	@ browser-sync reload
+	browser-sync reload
 
 watch: all
 	@ chokidar app -c "make -j 8 reload" \
