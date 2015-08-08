@@ -29,10 +29,6 @@ javascript: $(shell find $(IN) -name '*.js')
 	@ echo "Compiling JavaScript"
 	@ NODE_ENV=production webpack -p --config config/webpack.js --progress --quiet
 
-install:
-	@ echo "Installing npm dependencies..."
-	@ npm install --ignore-scripts
-
 watch: css static html
 	@ chokidar app -c "make -j 8 $^; browser-sync reload" \
 	& browser-sync start --server $(OUT) --no-open --no-ui --no-notify \
