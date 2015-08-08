@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "start": "make watch",
-    "test": "npm test"
+    "test": "make test"
   },
   "babel": {
     "stage": 1,

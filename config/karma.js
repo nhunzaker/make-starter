@@ -12,7 +12,7 @@ module.exports = function(config){
     webpackMiddleware: {
       noInfo: true
     },
-    reporters: ['nyan'],
+    reporters: ['mocha'],
     browsers: [ 'Firefox' ]
   })
 
