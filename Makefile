@@ -50,4 +50,4 @@ test-watch:
 	@ echo "Starting test server..."
 	@ karma start config/karma.js
 
-.PHONY: install watch clean test javascript
+.PHONY: install watch clean test test-watch javascript
