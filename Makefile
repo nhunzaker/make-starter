@@ -20,9 +20,9 @@ $(OUT)/%.html: $(VIEWS)/%.html $(VIEWS)/**/*.html
 	@ swig render $< > $@
 	@ echo $@
 
-$(OUT)/assets/%: $(IN)/assets/%
-	@ mkdir -p $(@D)
-	@ cp -r $< $@
+$(OUT)/assets/%/: $(IN)/assets/%
+	@mkdir -p $(@D)
+	@cp -r $< $@
 	@ echo $@
 
 javascript: $(shell find $(IN) -name '*.js')
