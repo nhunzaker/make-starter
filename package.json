@@ -1,6 +1,7 @@
 {
   "name": "make-starter",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "private": true,
   "description": "Makefile starter with common tasks and scenarios",
   "repository": {
     "type": "git",
@@ -9,12 +10,10 @@
   "license": "MIT",
   "scripts": {
     "start": "make watch",
-    "test": "npm test",
-    "postinstall": "make all -j8"
+    "test": "npm test"
   },
   "babel": {
     "stage": 1,
-    "loose": true,
     "optional": [
       "utility.inlineEnvironmentVariables"
     ]
@@ -30,15 +29,14 @@
     "webpack": "~1.11"
   },
   "devDependencies": {
-    "chokidar": "^1.0.5",
-    "karma": "~> 0.13.8",
-    "karma-cli": "~0.1",
+    "browser-sync": "~2.8",
+    "chokidar-cli": "^1.0.1",
+    "karma": "~>0.13.8",
     "karma-firefox-launcher": "~0.1",
     "karma-mocha": "~0.2",
     "karma-mocha-reporter": "~1.1",
     "karma-sinon-chai": "~1.0",
     "karma-webpack": "~1",
-    "mocha": "~2.2",
-    "browser-sync": "~2.8"
+    "mocha": "~2.2"
   }
 }

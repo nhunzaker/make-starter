@@ -1,7 +1,7 @@
 SHELL  := /bin/bash
-PATH   := node_modules/.bin:$(PATH)
+PATH   := ./node_modules/.bin:$(PATH)
 IN     := app
-OUT    := public
+OUT    := dist
 ASSETS := $(IN)/assets
 VIEWS  := $(IN)/views
 
@@ -26,16 +26,15 @@ $(OUT)/assets/%: $(IN)/assets/%
 	@ echo $@
 
 javascript: $(shell find $(IN) -name '*.js')
+	@ echo "Compiling JavaScript"
 	@ NODE_ENV=production webpack -p --config config/webpack.js --progress --quiet
 
 install:
+	@ echo "Installing npm dependencies..."
 	@ npm install --ignore-scripts
 
-reload: css images fonts html
-	@ browser-sync reload
-
-watch: reload
-	@ chokidar app -c "make -j 8 reload" \
+watch: css static html
+	@ chokidar app -c "make -j 8 $^; browser-sync reload" \
 	& browser-sync start --server $(OUT) --no-open --no-ui --no-notify \
 	& webpack -w --config config/webpack.js
 
@@ -50,4 +49,4 @@ test-watch:
 	@ echo "Starting test server..."
 	@ karma start config/karma.js
 
-.PHONY: install watch clean test test-watch javascript
+.PHONY: install watch clean test test-watch javascript tester
