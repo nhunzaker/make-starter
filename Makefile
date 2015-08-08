@@ -21,8 +21,8 @@ $(OUT)/%.html: $(VIEWS)/%.html $(VIEWS)/**/*.html
 	@ echo $@
 
 $(OUT)/assets/%/: $(IN)/assets/%
-	@mkdir -p $(@D)
-	@cp -r $< $@
+	@ mkdir -p $(@D)
+	@ cp -r $< $@
 	@ echo $@
 
 javascript: $(shell find $(IN) -name '*.js')
