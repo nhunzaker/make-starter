@@ -1,49 +1,53 @@
 SHELL  := /bin/bash
 PATH   := node_modules/.bin:$(PATH)
-SRC    := app
-DIST   := public
-ASSETS := $(SRC)/assets
-VIEWS  := $(SRC)/views
+IN     := app
+OUT    := public
+ASSETS := $(IN)/assets
+VIEWS  := $(IN)/views
 
-all    : javascript images css fonts html
-images : $(subst $(SRC), $(DIST), $(wildcard $(ASSETS)/images/*.*))
-fonts  : $(subst $(SRC), $(DIST), $(ASSETS)/fonts)
-html   : $(subst $(VIEWS), $(DIST), $(wildcard $(VIEWS)/*.*))
-css    : $(patsubst $(SRC)%.scss, $(DIST)%.css, $(wildcard $(ASSETS)/stylesheets/*.scss))
+all    : javascript css static html
+static : $(subst $(IN), $(OUT), $(ASSETS)/fonts $(ASSETS)/images)
+html   : $(subst $(VIEWS), $(OUT), $(wildcard $(VIEWS)/*.*))
+css    : $(patsubst $(IN)%.scss, $(OUT)%.css, $(wildcard $(ASSETS)/stylesheets/*.scss))
 
-$(DIST)/%.css: $(SRC)/%.scss $(shell find $(SRC) -name *.scss)
-	@ node-sass --output $(@D) --source-map $@.map $(SRC)/$*.scss -q
+$(OUT)/%.css: $(IN)/%.scss $(shell find $(IN) -name *.scss)
+	@ node-sass -q --output $(@D) --source-map $@.map $<
 	@ postcss --use autoprefixer -o $@ $@
 	@ echo $@
 
-$(DIST)/%.html: $(VIEWS)/%.html $(VIEWS)/**/*.html
+$(OUT)/%.html: $(VIEWS)/%.html $(VIEWS)/**/*.html
 	@ mkdir -p $(@D)
 	@ swig render $< > $@
 	@ echo $@
 
-$(DIST)/assets/%: $(SRC)/assets/%
+$(OUT)/assets/%: $(IN)/assets/%
 	@ mkdir -p $(@D)
 	@ cp -r $< $@
 	@ echo $@
 
-javascript: $(shell find $(SRC) -name '*.js')
-	@webpack --config config/webpack.js --progress --quiet
+javascript: $(shell find $(IN) -name '*.js')
+	@ NODE_ENV=production webpack -p --config config/webpack.js --progress --quiet
 
 install:
-	npm install --ignore-scripts
+	@ npm install --ignore-scripts
 
-reload: $(DIST) css images fonts html
-	browser-sync reload
+reload: css images fonts html
+	@ browser-sync reload
 
-watch: all
+watch: reload
 	@ chokidar app -c "make -j 8 reload" \
-	& browser-sync start --server $(DIST) --no-open --no-ui --no-notify \
+	& browser-sync start --server $(OUT) --no-open --no-ui --no-notify \
 	& webpack -w --config config/webpack.js
 
 clean:
-	rm -rf $(DIST)
+	rm -rf $(OUT)
 
 test:
-	karma start config/karma.js --single-run
+	@ echo "Executing tests..."
+	@ karma start config/karma.js --single-run
 
-.PHONY: install watch clean test
+test-watch:
+	@ echo "Starting test server..."
+	@ karma start config/karma.js
+
+.PHONY: install watch clean test javascript
