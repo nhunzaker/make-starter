@@ -1,13 +1,13 @@
 SHELL  := /bin/bash
 PATH   := ./node_modules/.bin:$(PATH)
 IN     := app
-OUT    := dist
+OUT    := build
 ASSETS := $(IN)/assets
 VIEWS  := $(IN)/views
 
 all    : javascript css static html
-static : $(subst $(IN), $(OUT), $(ASSETS)/fonts $(ASSETS)/images)
-html   : $(subst $(VIEWS), $(OUT), $(wildcard $(VIEWS)/*.*))
+static : $(addprefix $(OUT)/, fonts images)
+html   : $(subst $(VIEWS), $(OUT), $(wildcard $(VIEWS)/*.html))
 css    : $(patsubst $(IN)%.scss, $(OUT)%.css, $(wildcard $(ASSETS)/stylesheets/*.scss))
 
 $(OUT)/%.css: $(IN)/%.scss $(shell find $(IN) -name *.scss)
