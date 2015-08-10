@@ -30,9 +30,9 @@ javascript: $(shell find $(IN) -name '*.js')
 	@ NODE_ENV=production webpack -p --config config/webpack.js --progress --quiet
 
 watch: css static html
-	@ chokidar app -c "make -j 8 $^; browser-sync reload" \
-	& browser-sync start --server $(OUT) --no-open --no-ui --no-notify \
-	& webpack -w --config config/webpack.js
+	@ chokidar app -c "make -j 8 $^; browser-sync reload" --silent -d 200 \
+	& webpack -w --config config/webpack.js \
+	& browser-sync start --server $(OUT) --no-open --no-ui --no-notify
 
 clean:
 	rm -rf $(OUT)
@@ -45,4 +45,4 @@ test-watch:
 	@ echo "Starting test server..."
 	@ karma start config/karma.js
 
-.PHONY: install watch clean test test-watch javascript tester
+.PHONY: install watch clean test test-watch javascript
