@@ -11,7 +11,7 @@
     {% if process.env.NODE_ENV !== 'development' %}
       <style>{% include "../tmp/css/style.css" %}</style>
     {% else %}
-      <link rel="stylesheet" href="style.css" />
+      <link rel="stylesheet" href="style/style.css" />
     {% endif %}
 
     {% block head %}{% endblock %}
@@ -22,8 +22,6 @@
     {% block content %}{% endblock %}
 
     <p>Made with ♥ at <a href="http://viget.com">Viget</a></p>
-
-    {% include "../shared/page-nav.html" %}
 
     <script src="js/{{ name }}.{{ version }}.js"></script>
   </body>

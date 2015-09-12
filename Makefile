@@ -53,7 +53,7 @@ reload: style static html
 watch:
 	@ make html -B
 	@ make reload
-	@ ./bin/watch
+	@ ./bin/watch $(OUT)
 
 install:
 	@ ./bin/install

@@ -6,8 +6,14 @@ var WebpackDev  = require("webpack-dev-middleware")
 var WebpackHot  = require("webpack-hot-middleware")
 var config      = require(__dirname + '/../config/webpack')
 var port        = process.env.PORT || 3000
-var spawn        = require('child_process').spawn
+var spawn       = require('child_process').spawn
 var settings    = require('../package.json')
+var assert      = require('assert')
+var path        = require('path')
+
+// Make sure we have some required variables
+assert.ok(process.argv[2] != null, 'Please provide a base directory as the first argument.')
+var baseDir = path.resolve(process.argv[2])
 
 var location = require('url').format({
   hostname : 'localhost',
@@ -31,9 +37,19 @@ if (process.env.HOT !== 'false') {
   )
 }
 
-var compiler = Webpack(config)
+var compiler = Webpack(config, function() {
+  console.log('hi')
+})
 
 var server = BrowserSync.create(settings.name)
+
+server.watch("./tmp/**/*.css", function() {
+  server.reload('*.css')
+})
+
+server.watch("app/**/*").on('change', function (event, file) {
+  spawn('make', ['reload', '-j', '8'], { stdio: 'inherit' })
+})
 
 server.init({
   notify: false,
@@ -46,7 +62,7 @@ server.init({
   },
 
   server: {
-    baseDir: config.output.path,
+    baseDir: baseDir,
     middleware: [
       WebpackDev(compiler, { noInfo: true }),
       WebpackHot(compiler, { log: false })
@@ -54,13 +70,8 @@ server.init({
   }
 });
 
-server.watch("./tmp/**/*.css", function() {
-  server.reload('*.css')
-})
-
-server.watch("app/**/*").on('change', function (event, file) {
-  spawn('make', ['reload', '-j', '8'], { stdio: 'inherit' })
-})
+// So the program will not close instantly
+process.stdin.resume()
 
 function exitHandler(options, err) {
   if (options.cleanup) {

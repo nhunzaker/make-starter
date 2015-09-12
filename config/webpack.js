@@ -10,6 +10,7 @@ module.exports = {
 
   output: {
     path: Path.resolve(__dirname, '../tmp/js'),
+    publicPath: "",
     filename: [ settings.name, settings.version, 'js' ].join('.')
   },
 
