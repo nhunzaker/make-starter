@@ -8,20 +8,9 @@
 # non-soft tabs.
 ################################################################################
 
-# Add Node.js executables to the path. This lets us reference programs like
-# node-sass directly in the Makefile.
 SHELL := /bin/bash
 PATH  := ./node_modules/.bin:$(PATH)
 
-# What's up with `A := B`?. It means "immediately set this value".
-# This is different than `=`, which determines the value every time the variable
-# is used. `TIME = $(shell date)` will always return the current date, not the
-# date at the time of assignment.
-#
-# More info here:
-# http://stackoverflow.com/questions/448910/makefile-variable-assignment
-
-# Immediately set variables for our build directories
 IN     := app
 OUT    := tmp
 ASSETS := $(IN)/assets
