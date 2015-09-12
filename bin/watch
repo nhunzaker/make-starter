@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+
+var BrowserSync = require("browser-sync")
+var Webpack     = require('webpack')
+var WebpackDev  = require("webpack-dev-middleware")
+var WebpackHot  = require("webpack-hot-middleware")
+var config      = require(__dirname + '/../config/webpack')
+var port        = process.env.PORT || 3000
+var spawn        = require('child_process').spawn
+var settings    = require('../package.json')
+
+var location = require('url').format({
+  hostname : 'localhost',
+  port     : port,
+  protocol : 'http'
+})
+
+if (process.env.HOT !== 'false') {
+  config.entry.unshift(
+    'webpack-hot-middleware/client?path' + location,
+    'webpack/hot/only-dev-server'
+  )
+
+  config.plugins.push(
+    // Occurence ensures consistent build hashes
+    new Webpack.optimize.OccurenceOrderPlugin(),
+    // Enables Hot Module Replatement
+    new Webpack.HotModuleReplacementPlugin(),
+    // handle errors more cleanly
+    new Webpack.NoErrorsPlugin()
+  )
+}
+
+var compiler = Webpack(config)
+
+var server = BrowserSync.create(settings.name)
+
+server.init({
+  notify: false,
+  open: false,
+  port: port,
+  ghostMode: false,
+
+  watchOptions: {
+    ignored: /([\/\\]\.|\.map)/
+  },
+
+  server: {
+    baseDir: config.output.path,
+    middleware: [
+      WebpackDev(compiler, { noInfo: true }),
+      WebpackHot(compiler, { log: false })
+    ]
+  }
+});
+
+server.watch("./tmp/**/*.css", function() {
+  server.reload('*.css')
+})
+
+server.watch("app/**/*").on('change', function (event, file) {
+  spawn('make', ['reload', '-j', '8'], { stdio: 'inherit' })
+})
+
+function exitHandler(options, err) {
+  if (options.cleanup) {
+    console.log("[BS] Shutting down server (pid %s)", process.pid)
+    server.exit()
+  }
+
+  if (err) console.log(err.stack)
+  if (options.exit) process.exit()
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null, { cleanup:true }))
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, { exit:true }))
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, { exit:true }))

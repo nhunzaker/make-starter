@@ -1,42 +1,55 @@
 {
   "name": "make-starter",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "Makefile starter with common tasks and scenarios",
+  "description": "Front-end Makefile starter kit with common tasks and scenarios",
   "repository": {
     "type": "git",
     "url": "git://github.com/nhunzaker/make-starter.git"
   },
+  "site": {
+    "name": "Make Starter",
+    "theme": "#000",
+    "description": "Make all the things!",
+    "image": "images/make.png",
+    "twitter": "@nhunzaker",
+    "creator": "@nhunzaker"
+  },
+  "main": "./app/index.js",
   "license": "MIT",
   "scripts": {
     "start": "make watch",
     "test": "make test"
   },
   "babel": {
-    "stage": 1,
+    "stage": 2,
     "optional": [
       "utility.inlineEnvironmentVariables"
     ]
   },
   "dependencies": {
-    "autoprefixer": "~5.2",
-    "babel-core": "~5",
-    "babel-loader": "~5",
-    "babel-plugin-object-assign": "~1.2",
-    "node-sass": "~3.2",
-    "postcss-cli": "~1.5",
-    "swig": "~1.4",
-    "webpack": "~1.11"
+    "autoprefixer": "6.0.2",
+    "babel-core": "5.8.24",
+    "babel-loader": "5.3.2",
+    "babel-plugin-object-assign": "1.2.1",
+    "html-minifier": "0.7.2",
+    "json-loader": "0.5.2",
+    "node-sass": "3.3.2",
+    "postcss-cli": "2.1.0",
+    "swig": "1.4.2",
+    "webpack": "1.12.1"
   },
   "devDependencies": {
-    "browser-sync": "~2.8",
-    "chokidar-cli": "^1.0.1",
-    "karma": "~>0.13.8",
-    "karma-firefox-launcher": "~0.1",
-    "karma-mocha": "~0.2",
-    "karma-mocha-reporter": "~1.1",
-    "karma-sinon-chai": "~1.0",
-    "karma-webpack": "~1",
-    "mocha": "~2.2"
+    "browser-sync": "2.9.3",
+    "karma": "0.13.9",
+    "karma-chrome-launcher": "0.2.0",
+    "karma-firefox-launcher": "0.1.6",
+    "karma-mocha": "0.2.0",
+    "karma-phantomjs-launcher": "0.2.1",
+    "karma-webpack": "1.7.0",
+    "mocha": "2.3.2",
+    "phantomjs": "1.9.18",
+    "webpack-dev-middleware": "1.2.0",
+    "webpack-hot-middleware": "2.0.0"
   }
 }

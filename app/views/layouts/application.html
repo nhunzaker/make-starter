@@ -1,17 +1,30 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>{% block title %}Make Starter{% endblock %}</title>
-  <link rel="stylesheet" href="assets/stylesheets/style.css">
-  {% block head %}{% endblock %}
-</head>
-<body>
-  <h1>Make All The Things!</h1>
-  {% block content %}{% endblock %}
-  <p>Made with ♥ at <a href="http://viget.com">Viget</a></p>
-  {% include "../shared/page-nav.html" %}
-  <script src="assets/javascripts/shared.js"></script>
-  {% block javascript %}{% endblock %}
-</body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{{ site.name }}</title>
+
+    {% include "./meta.html" %}
+
+    {% if process.env.NODE_ENV !== 'development' %}
+      <style>{% include "../tmp/css/style.css" %}</style>
+    {% else %}
+      <link rel="stylesheet" href="style.css" />
+    {% endif %}
+
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <h1>Make All The Things!</h1>
+
+    {% block content %}{% endblock %}
+
+    <p>Made with ♥ at <a href="http://viget.com">Viget</a></p>
+
+    {% include "../shared/page-nav.html" %}
+
+    <script src="js/{{ name }}.{{ version }}.js"></script>
+  </body>
 </html>

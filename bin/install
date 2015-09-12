@@ -1,0 +1,59 @@
+#!/bin/bash
+
+NVM_LABEL="Node Version Manager (nvm)"
+NODE_VERSION=$(cat .nvmrc)
+NODE_LABEL="Node.js $NODE_VERSION"
+
+echo
+echo "Welcome. This script will install dependencies for this project."
+echo "If you would like to read the contents of this script before running"
+echo "it, checkout ./bin/install."
+echo
+
+read -p "Continue? [y/n] " -n 1 -r
+echo
+echo
+if [[ $REPLY =~ ^[Nn]$ ]]
+then
+    echo "Goodbye."
+    exit
+fi
+
+# Pull in NVM if it already exists
+if [ -e ~/.nvm/nvm.sh ]
+then source ~/.nvm/nvm.sh
+fi
+
+# First, we need to install Node Version Manager
+# https://github.com/creationix/nvm
+if hash nvm 2> /dev/null; then
+    echo "✓ $NVM_LABEL installed"
+else
+    read -p "Install $NVM_LABEL? [y/n] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Nn]$ ]]
+    then
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | bash
+        source ~/.nvm/nvm.sh
+    fi
+fi
+
+# Next, install the version of Node used by this project (found in .nvmrc).
+# More on that here:
+# https://github.com/creationix/nvm#usage
+if [ ! "$NODE_VERSION" == "$(nvm version)" ]; then
+    read -p "Install $NODE_LABEL? [y/n] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Nn]$ ]]
+    then
+        nvm install
+    fi
+else
+    echo "✓ $NODE_LABEL installed"
+fi
+
+# Finally, pull down dependencies
+echo
+echo "Installing dependencies..."
+npm install --ignore-scripts
+echo "All set! \n\n Boot the app by running: npm start"

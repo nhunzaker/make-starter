@@ -1,0 +1,29 @@
+#!/bin/bash
+
+OUT=$1
+
+if [ $# -lt 1 ]; then
+    OUT=$(pwd)
+fi
+
+REPORT=""
+
+function gz_size() {
+    echo "$(gzip -c $1 | wc -c | xargs)" | awk '{printf "%1.1f", $1 / 1000}'
+}
+
+for filename in $OUT/**/*.{html,css,js}; do
+    if [ -f $filename ]; then
+        REPORT="$REPORT$filename\t:\t$(gz_size $filename)kb\n"
+    fi
+done
+
+if [[ "$REPORT" == "" ]]; then
+    echo "Nothing to report for $OUT"
+else
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Analysis of $OUT:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "$REPORT" | column -t
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+fi

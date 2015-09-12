@@ -1,6 +1,5 @@
 .DS_Store
 .sass-cache
-build
+tmp
 Desktop.ini
 node_modules
-app/assets/stylesheets/generated

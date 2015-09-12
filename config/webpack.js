@@ -1,30 +1,39 @@
-var path = require('path')
-
+var Path = require('path')
+var Webpack = require('webpack')
 var isDevelopment = process.env.NODE_ENV !== 'production'
+var settings = require('../package')
 
 module.exports = {
-  debug: isDevelopment,
-
   devtool: isDevelopment ? '#eval-source-map' : 'source-map',
 
-  context: path.resolve(__dirname, '..', './app/assets/javascripts/'),
-
-  entry: {
-    page1 : './page1.js',
-    page2 : './page2.js'
-  },
+  entry: [ settings.main ],
 
   output: {
-    path: './public/assets/javascripts/',
-    filename: '[name].js',
-    publicPath: 'assets/javascripts/'
+    path: Path.resolve(__dirname, '../tmp/js'),
+    filename: [ settings.name, settings.version, 'js' ].join('.')
+  },
+
+  plugins: [
+    new Webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV)
+    })
+  ],
+
+  resolve: {
+    extensions: [ '', '.js', '.json' ]
   },
 
   module: {
-    loaders: [{
-      test: /\.js*$/,
-      loader: 'babel',
-      exclude: /node_modules/
-    }]
+    loaders: [
+      {
+        test: /\.jsx*$/,
+        loader: 'babel',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.json$/,
+        loader: 'json'
+      }
+    ]
   }
 }

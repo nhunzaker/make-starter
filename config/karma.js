@@ -1,19 +1,26 @@
 module.exports = function (config) {
 
   return config.set({
-    frameworks: ['mocha', 'sinon-chai'],
+    frameworks: [ 'mocha' ],
+    client: {
+      mocha: {
+        ui: 'qunit'
+      }
+    },
     files: [
-      '../app/assets/javascripts/**/__tests__/*'
+      '../test/**/*.test.js'
     ],
     preprocessors: {
-      '../app/assets/javascripts/**/__tests__/*': [ 'webpack' ]
+      '../test/**/*.test.js': [ 'webpack' ]
     },
     webpack: require('./webpack'),
     webpackMiddleware: {
       noInfo: true
     },
-    reporters: ['mocha'],
-    browsers: [ 'Firefox' ]
+    phantomjsLauncher: {
+      exitOnResourceError: true
+    },
+    browsers: process.env.CIRCLECI ? [ 'Firefox', 'Chrome', 'PhantomJS' ] : [ 'PhantomJS' ]
   })
 
 }
