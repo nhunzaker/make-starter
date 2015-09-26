@@ -13,7 +13,11 @@
     "description": "Make all the things!",
     "image": "images/make.png",
     "twitter": "@nhunzaker",
-    "creator": "@nhunzaker"
+    "creator": "@nhunzaker",
+    "icons": {
+      "medium" : "images/make.png",
+      "large"  : "images/make.png"
+    }
   },
   "main": "./app/index.js",
   "license": "MIT",
