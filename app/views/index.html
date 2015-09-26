@@ -1,6 +1,22 @@
-{% extends 'layouts/application.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-{% block content %}
+    <title>{{ site.name }}</title>
 
-  {% include "shared/social-icons.html" %}
-{% endblock %}
+    {% include "./parts/meta.html" %}
+
+    {% if process.env.NODE_ENV !== 'development' %}
+      <style>{% include "../tmp/css/style.css" %}</style>
+    {% else %}
+      <link rel="stylesheet" href="style/style.css" />
+    {% endif %}
+  </head>
+  <body>
+    <h1>Make All The Things!</h1>
+    <img src="images/make.png" alt="GNU Make">
+    <script src="js/{{ name }}.{{ version }}.js"></script>
+  </body>
+</html>
