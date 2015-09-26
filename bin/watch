@@ -37,11 +37,8 @@ if (process.env.HOT !== 'false') {
   )
 }
 
-var compiler = Webpack(config, function() {
-  console.log('hi')
-})
-
-var server = BrowserSync.create(settings.name)
+var compiler = Webpack(config)
+var server   = BrowserSync.create(settings.name)
 
 server.watch("./tmp/**/*.css", function() {
   server.reload('*.css')
